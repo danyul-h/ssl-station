@@ -53,11 +53,16 @@ def fetch_ids(urls, session):
     # print(ids)
     return ids
 
-def parse_opportunity(soup):
+def clean_text(text):
+    cleaned_text = text.replace("\u00a0", " ").replace("\t", " ").replace("\r", "").replace("\n", " ").replace("\xa0", " ").replace("\u2019", "'").replace('\"', '"').strip()
+    cleaned_text = re.sub(r"\s+", " ", cleaned_text)
+    return cleaned_text
+
+def parse_opportunity(soup, id):
     title = soup.find("h1", class_="panel-title").get_text()
     
     remaining_element = soup.find("div", class_="spots-remaining")
-    remaining = remaining_element.get_text() if remaining_element else ""
+    remaining = remaining_element.find(string=True, recursive=False) if remaining_element else ""
 
     date_element = soup.find("td", class_="info-block date")
     date = date_element.find("div", class_="info").get_text() if date_element else ""
@@ -70,7 +75,7 @@ def parse_opportunity(soup):
         description.append(p.get_text())
 
     location_element = soup.find("tr", class_="address")
-    location = location_element.find("td", class_="text").get_text() if location_element else "virtual"
+    location = location_element.find("td", class_="text").get_text() if location_element else ""
 
     organization_element = soup.find("div", class_="agency")
     organization = organization_element.find("div", class_="title").get_text() if organization_element else ""
@@ -83,12 +88,12 @@ def parse_opportunity(soup):
 
     requirements = []
     requirements_element = soup.find("section", class_="requirements")
-    
     if requirements_element:
         for td in requirements_element.find_all("td", class_="text"):
             requirements.append(td.get_text())
 
     json = {
+        "id" : id,
         "title" : title, #h1.panel-title.get_text()
         "remaining" : remaining, #may not exist, div.spots-remaining .get_text()
         "date" : date, # td,info-block date -> div.info .get_text()
@@ -97,15 +102,16 @@ def parse_opportunity(soup):
         "location" : location, #tr.address -> td.text .get_text()
         "organization" : organization, #div.agency -> div.title .get_text()
         "interests" : interests, #svg.icon interest-icon 044e89 . get (data-original-title)
-        "requirements" : requirements, #
+        "requirements" : requirements, # section.requirements -> td.text . get_text()
     }
-    # for i in json:
-    #     if isinstance(json[i], list):
-    #         for j in json[i]:
-    #             if j:
-    #                 j = j.replace("\t", "").replace("\n", "").replace("\r", "").replace("  ", " ").strip()
-    #     else: 
-    #         json[i] = json[i].replace("\t", "").replace("\n", "").replace("\r", "").replace("\xa0", " ").replace("  ", " ").strip()
+    for i in json:
+        if not isinstance(json[i], list):
+            json[i] = clean_text(json[i])
+            continue
+        temp_list = []
+        for j in json[i]:
+            if j and clean_text(j): temp_list.append(clean_text(j))
+            json[i] = temp_list
     return json
 
 #fetch all opportunities from a collection of urls (based off of opportunity id)
@@ -113,7 +119,7 @@ def fetch_opportunities(urls, session):
     start = time.time()
     with concurrent.futures.ThreadPoolExecutor() as executor:
         soups = executor.map(fetch_page, urls, repeat(session))
-        opportunities = executor.map(parse_opportunity, soups)
+        opportunities = executor.map(parse_opportunity, soups, [url.split("need_id=")[1] for url in urls])
     end = time.time()
     print(f"Time elapssed fetching all opportunity data: {round(end-start, 2)}")
     return opportunities
@@ -136,11 +142,11 @@ params = {
     "need_init_id" : "144"
 }
 
-opportunities = fetch_opportunities(fetch_ids(generate_list_urls(url, params, session), session), session)
-# opportunities = fetch_opportunities(fetch_ids(["https://montgomerycountymd.galaxydigital.com/need/index/12/?need_init_id=144"], session), session)
+# opportunities = fetch_opportunities(fetch_ids(generate_list_urls(url, params, session), session), session)
+opportunities = fetch_opportunities(fetch_ids(["https://montgomerycountymd.galaxydigital.com/need/index/12/?need_init_id=144"], session), session)
 for i in opportunities:
     print(json.dumps(i, indent=4))
 
 #observations...
 #parsing is way quicker than fetching a page, arguably no need to optimize it
-#fetching the lists takes longer than the opportunites themselves (5-3 secs vs. 0-1 secs)
+#fetching the lists takes longer than the opportunites themselves (2-5 secs vs. 0-2 secs)
