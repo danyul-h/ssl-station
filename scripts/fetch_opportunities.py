@@ -72,15 +72,21 @@ def parse_opportunity(soup):
     location_element = soup.find("tr", class_="address")
     location = location_element.find("td", class_="text").get_text() if location_element else "virtual"
 
-    organization = soup.find("div", class_="agency").find("div", class_="title").get_text()
+    organization_element = soup.find("div", class_="agency")
+    organization = organization_element.find("div", class_="title").get_text() if organization_element else ""
 
     interests = []
-    for li in soup.find("ul", class_="interests-list").find_all("li"):
-        interests.append(li.find("svg").get("title"))
+    interests_element = soup.find("ul", class_="interests-list")
+    if interests_element:
+        for li in interests_element.find_all("li"):
+            interests.append(li.find("svg").get("title"))
 
     requirements = []
-    for td in soup.find("section", class_="requirements").find_all("td", class_="text"):
-        requirements.append(td.get_text())
+    requirements_element = soup.find("section", class_="requirements")
+    
+    if requirements_element:
+        for td in requirements_element.find_all("td", class_="text"):
+            requirements.append(td.get_text())
 
     json = {
         "title" : title, #h1.panel-title.get_text()
@@ -130,10 +136,11 @@ params = {
     "need_init_id" : "144"
 }
 
-# opportunities = fetch_opportunities(fetch_ids(generate_list_urls(url, params, session), session), session)
-opportunities = fetch_opportunities(fetch_ids(["https://montgomerycountymd.galaxydigital.com/need/index/12/?need_init_id=144"], session), session)
+opportunities = fetch_opportunities(fetch_ids(generate_list_urls(url, params, session), session), session)
+# opportunities = fetch_opportunities(fetch_ids(["https://montgomerycountymd.galaxydigital.com/need/index/12/?need_init_id=144"], session), session)
 for i in opportunities:
     print(json.dumps(i, indent=4))
+
 #observations...
 #parsing is way quicker than fetching a page, arguably no need to optimize it
 #fetching the lists takes longer than the opportunites themselves (5-3 secs vs. 0-1 secs)
