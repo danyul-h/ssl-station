@@ -71,8 +71,9 @@ def parse_opportunity(soup, id):
     time = time_element.find("div", class_="info").get_text() if time_element else ""
 
     description = []
-    for p in soup.find("div", class_="section-content jodit-content").find_all("p"):
-        description.append(p.get_text())
+    description_element = soup.find("div", class_="section-content jodit-content")
+    for child in description_element.children:
+        description.append(child.get_text())
 
     location_element = soup.find("tr", class_="address")
     location = location_element.find("td", class_="text").get_text() if location_element else ""
@@ -98,7 +99,8 @@ def parse_opportunity(soup, id):
         "remaining" : remaining, #may not exist, div.spots-remaining .get_text()
         "date" : date, # td,info-block date -> div.info .get_text()
         "time" : time, # td.info-block time -> div.info .get_text()
-        "description" : description, #append all p.get_text() in div.section-content jodit-content
+        # "description" : " ".join(description), #append all p.get_text() in div.section-content jodit-content
+        "description" : description,
         "location" : location, #tr.address -> td.text .get_text()
         "organization" : organization, #div.agency -> div.title .get_text()
         "interests" : interests, #svg.icon interest-icon 044e89 . get (data-original-title)
