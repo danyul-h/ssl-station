@@ -146,8 +146,13 @@ params = {
 
 # opportunities = fetch_opportunities(fetch_ids(generate_list_urls(url, params, session), session), session)
 opportunities = fetch_opportunities(fetch_ids(["https://montgomerycountymd.galaxydigital.com/need/index/12/?need_init_id=144"], session), session)
-for i in opportunities:
-    print(json.dumps(i, indent=4))
+
+filename = "scraped.json"
+
+with open(filename, "w") as file:
+    for i in opportunities:
+        json.dump(i, file, indent=4)
+
 
 #observations...
 #parsing is way quicker than fetching a page, arguably no need to optimize it
