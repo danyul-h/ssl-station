@@ -87,21 +87,21 @@ def parse_opportunity(soup, id):
                         text = text.split("@")
                         shift["date"] = text[0]
                         text = text[1].split("to")
-                        shift["start"] = text[0]
-                        shift["end"] = text[1]
+                        shift["start_time"] = text[0]
+                        shift["end_time"] = text[1]
                     case 1:
                         text = text.split("hours")
                         shift["duration"] = text[0]
                     case 2:
                         text = text.split("of")
-                        shift["vacancy"] = text[0]
-                        shift["spots"] = text[1]
+                        shift["vacant_spots"] = text[0]
+                        shift["total_spots"] = text[1]
             shifts.append(shift)
 
     json = {
         "id" : id,
         "title" : title, #h1.panel-title.get_text()
-        "remaining" : remaining, #may not exist, div.spots-remaining .get_text()
+        "remaining_spots" : remaining, #may not exist, div.spots-remaining .get_text()
         "date" : date, # td,info-block date -> div.info .get_text()
         "time" : time, # td.info-block time -> div.info .get_text()
         # "description" : " ".join(description), #append all p.get_text() in div.section-content jodit-content
@@ -148,7 +148,7 @@ params = {
 
 # opportunities = fetch_opportunities(session, generate_need_urls(session, generate_list_urls(session, url, params)))
 # opportunities = fetch_opportunities(session, generate_need_urls(session, ["https://montgomerycountymd.galaxydigital.com/need/index/144/?need_init_id=144"]))
-opportunities = fetch_opportunities(session, ["https://montgomerycountymd.galaxydigital.com/need/detail/?need_id=1061684", "https://montgomerycountymd.galaxydigital.com/need/detail/?need_id=1061622", "https://montgomerycountymd.galaxydigital.com/need/detail/?need_id=1030293"])
+opportunities = fetch_opportunities(session, ["https://montgomerycountymd.galaxydigital.com/need/detail/?need_id=1061622", "https://montgomerycountymd.galaxydigital.com/need/detail/?need_id=1030293", "https://montgomerycountymd.galaxydigital.com/need/detail/?need_id=911309", "https://montgomerycountymd.galaxydigital.com/need/detail/?need_id=1026190"])
 
 for i in opportunities:
     print(json.dumps(i, indent=4))
