@@ -1,5 +1,4 @@
 "use client"
-import Image from "next/image";
 import {motion} from "motion/react";
 import {Canvas, useFrame} from "@react-three/fiber"
 import { useRef } from "react"
@@ -30,12 +29,13 @@ export default function Home() {
           <div className="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:max-w-none lg:space-x-8 lg:items-center">
             <div className="mx-auto place-self-center lg:col-span-7">
               <motion.h1
-                initial={{ x: 0, opacity: 0 }}
+                initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 className="max-w-2xl mb-4 text-5xl font-bold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white"
               >
-                ssl<span className="text-primary">station</span>
+                <span className="text-primary">ssl</span>
+                station
               </motion.h1>
               <motion.p
                 initial={{ x: 0, opacity: 0 }}
@@ -59,14 +59,14 @@ export default function Home() {
                 transition={{delay:0.4, duration:0.5}}
                 className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400"
               >
-                SSL station is made by students, for students.
+                SSL Station is made by students, for students.
               </motion.p>
             </div>
             <div className="mx-auto hidden lg:mt-0 lg:col-span-5 lg:dark:block h-full">
               <Canvas>
                 <directionalLight position={[0,0,2]} intensity={0.5}/>
                 <ambientLight intensity={0.1}/>
-                <MyMesh position={[0,0,0]} color="red" size={[2,2,2]}/>
+                <MyMesh position={[0,0,0]} color="red" size={[3,3,3]}/>
               </Canvas>
             </div>
           </div>
@@ -83,19 +83,31 @@ export default function Home() {
           </svg>
           <div className="grid grid-cols:9 text-background">
             <div className="mx-auto place-self-center lg:col-span3">
-              <h1>
+              <motion.h1
+                initial={{ x: -30, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
                 Optimized Schedules
-              </h1>
+              </motion.h1>
             </div>
             <div className="mx-auto place-self-center lg:col-span3">
-              <h1>
+              <motion.h1
+                initial={{ x: 30, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
                 Routing to Opportunities
-              </h1>
+              </motion.h1>
             </div>
             <div className="mx-auto place-self-center lg:col-span3">
-              <h1>
+              <motion.h1
+                initial={{ x: -30, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
                 Personalized to your interests
-              </h1>
+              </motion.h1>
             </div>
           </div>
           <svg 
@@ -110,24 +122,6 @@ export default function Home() {
           </svg>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a 
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://github.com/danyul-h/ssl-station"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            className="dark:invert"
-            aria-hidden
-            src="/github-icon.svg"
-            alt="Github icon"
-            width={16}
-            height={16}
-          />
-          Open Source
-        </a>
-      </footer>
     </div>
   );
 }

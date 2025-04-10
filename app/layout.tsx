@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,20 +28,55 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="invisible h-2 w-full bg-primary sm:visible"></div>
+        <div className="h-2 w-full bg-primary"></div>
         <header className="top-0 w-full">
-        <nav className="flex h-16 max-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8">
+        <nav className="flex h-16 items-center justify-between p-6 lg:px-8">
           <a href="/">
             <h1 className="relative flex select-none flex-row items-baseline font-bold text-4xl">
-              ssl
               <span className="text-primary">
-                station
+                ssl
               </span>
+              station
             </h1>
           </a>
-          </nav>
+          <div>
+            <a href="/login" className="invisible sm:visible">
+              <h1 className="relative flex select-none flex-row items-baseline font-bold text-3xl">
+                login
+              </h1>
+            </a>
+            <a>
+              <Image
+                aria-hidden
+                className="sm:hidden dark:invert"
+                src="/github-icon.svg"
+                alt="-"
+                width={32}
+                height={32}
+              />
+            </a>
+          </div>
+        </nav>
         </header>
         {children}
+        <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+        <a 
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://github.com/danyul-h/ssl-station"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            className="dark:invert"
+            aria-hidden
+            src="/github-icon.svg"
+            alt="Github icon"
+            width={16}
+            height={16}
+          />
+          Open Source
+        </a>
+      </footer>
       </body>
     </html>
   );
