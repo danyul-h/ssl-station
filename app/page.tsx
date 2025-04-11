@@ -2,9 +2,16 @@
 import {motion} from "motion/react";
 import {Canvas, useFrame} from "@react-three/fiber"
 import { useRef } from "react"
+import { Mesh } from "three";
 
-const MyMesh = ({position, size, color}) => {
-  const refMesh = useRef();
+interface MyMeshProps {
+  position: [number, number, number];
+  size: [number, number, number];
+  color: string;
+};
+
+const MyMesh = ({position, size, color}:MyMeshProps) => {
+  const refMesh = useRef<Mesh>(null);
 
   useFrame((state, delta) => {
     if(refMesh.current) {
