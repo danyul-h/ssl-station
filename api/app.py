@@ -22,7 +22,7 @@ def get_opportunity(opportunity_id):
     if opportunity:
         return jsonify(opportunity)
     else:
-        return jsonify({"error": "Not found"}), 404
+        return {}, 404
 
 if __name__ == "__main__":
     app.run(port=5000)

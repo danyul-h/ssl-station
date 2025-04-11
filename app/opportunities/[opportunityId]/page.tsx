@@ -1,4 +1,5 @@
 import { Opportunity } from "@/lib/types";
+import { notFound } from "next/navigation";
 
 export default async function OpportunityDetails({
 	params,
@@ -7,6 +8,11 @@ export default async function OpportunityDetails({
 }) {
 	const res = await fetch(`http://localhost:5000/api/opportunities/${params.opportunityId}`);
 	const opportunity: Opportunity = await res.json();
+	
+	if (Object.keys(opportunity).length === 0){
+		return notFound()
+	}
+
 	return (
 		<div>
 			<h1>Title: {opportunity.title}</h1>
