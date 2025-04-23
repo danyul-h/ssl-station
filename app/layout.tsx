@@ -30,7 +30,7 @@ export default function RootLayout({
       >
         <div className="h-2 w-full bg-primary"></div>
         <header className="top-0 w-full">
-        <nav className="flex h-16 items-center justify-between p-6 lg:px-8">
+        <nav className="flex h-16 items-center justify-between p-6 lg:px-8 bg-background-light">
           <a href="/">
             <h1 className="relative flex select-none flex-row items-baseline font-bold text-4xl">
               <span className="text-primary">
@@ -45,7 +45,7 @@ export default function RootLayout({
                 login
               </h1>
             </a>
-            <a>
+            {/* <a>
               <Image
                 aria-hidden
                 className="sm:hidden dark:invert"
@@ -54,7 +54,7 @@ export default function RootLayout({
                 width={32}
                 height={32}
               />
-            </a>
+            </a> */}
           </div>
         </nav>
         </header>
